@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HelloService {
-    public Greeting getGreetingObject()
+    //注意，这里已经不是String,而是Greeting
+    public Greeting getGreetingWithParam(String name)
     {
+        String message = "Hello, " + name + "! Welcome to Spring Boot 4.0.";
+
         // 创建一个 Greeting 对象并填入数据
         // 这里的 new 是允许的，因为它是数据载体 (Model)
         return new Greeting(
-                "Welcome to Spring Boot 4.0!",
+                message,
                 "Success",
                 200
         );

@@ -1,6 +1,7 @@
 package com.java.tutorial.clean_structure.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.java.tutorial.clean_structure.service.HelloService;
 import com.java.tutorial.clean_structure.model.Greeting;
@@ -22,13 +23,13 @@ public class HelloController {
     }
 
     /**
-     * 注意：这里的返回值类型改成了 Greeting 对象。
-     * Spring Boot 会自动使用内置的 Jackson 库，
-     * 将 Java 对象转换为 JSON 格式发送给浏览器。
+     * @RequestParam(value = "name", defaultValue = "Guest"):
+     * 1. 去 URL 找名字叫 "name" 的参数。
+     * 2. 如果用户没传这个参数，默认值就是 "Guest"。
      */
     @GetMapping("/hello")
     //就是这里注意看String变成了Greeting
-    public Greeting sayhello(){
-        return helloService.getGreetingObject();
+    public Greeting sayhello(@RequestParam(value = "name", defaultValue = "Guest") String name){
+        return helloService.getGreetingWithParam(name);
     }
 }
