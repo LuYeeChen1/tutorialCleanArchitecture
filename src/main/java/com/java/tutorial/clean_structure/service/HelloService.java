@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HelloService {
+    //注意，这里已经是Greeting而不是String
     public Greeting getGreetingObject()
     {
         // 创建一个 Greeting 对象并填入数据
