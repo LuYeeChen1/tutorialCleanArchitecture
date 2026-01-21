@@ -3,6 +3,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.java.tutorial.clean_structure.service.HelloService;
+import com.java.tutorial.clean_structure.model.Greeting;
 
 /**
  * @RestController: 告诉 Spring 这是一个 Web 接口类
@@ -21,11 +22,13 @@ public class HelloController {
     }
 
     /**
-     * @GetMapping("/hello"): 绑定 URL 路径
-     * 当你在浏览器输入 localhost:8080/hello 时，会触发这个方法
+     * 注意：这里的返回值类型改成了 Greeting 对象。
+     * Spring Boot 会自动使用内置的 Jackson 库，
+     * 将 Java 对象转换为 JSON 格式发送给浏览器。
      */
     @GetMapping("/hello")
-    public String sayhello(){
-        return helloService.getGreetingMessage();
+    //就是这里注意看String变成了Greeting
+    public Greeting sayhello(){
+        return helloService.getGreetingObject();
     }
 }

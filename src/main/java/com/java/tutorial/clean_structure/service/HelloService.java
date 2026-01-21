@@ -1,4 +1,5 @@
 package com.java.tutorial.clean_structure.service;
+import com.java.tutorial.clean_structure.model.Greeting;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,8 +9,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HelloService {
-    public String getGreetingMessage()
+    public Greeting getGreetingObject()
     {
-        return "Hello from the Service Layer! This is Clean Architecture.";
+        // 创建一个 Greeting 对象并填入数据
+        // 这里的 new 是允许的，因为它是数据载体 (Model)
+        return new Greeting(
+                "Welcome to Spring Boot 4.0!",
+                "Success",
+                200
+        );
     }
 }
