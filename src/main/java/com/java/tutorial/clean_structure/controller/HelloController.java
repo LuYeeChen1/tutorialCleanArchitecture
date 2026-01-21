@@ -1,7 +1,7 @@
 package com.java.tutorial.clean_structure.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.java.tutorial.clean_structure.service.HelloService;
 import com.java.tutorial.clean_structure.model.Greeting;
@@ -23,13 +23,12 @@ public class HelloController {
     }
 
     /**
-     * @RequestParam(value = "name", defaultValue = "Guest"):
-     * 1. 去 URL 找名字叫 "name" 的参数。
-     * 2. 如果用户没传这个参数，默认值就是 "Guest"。
+     * @PathVariable: 告诉 Spring 从 URL 路径中提取 {name} 的值。
+     * URL 样例: http://localhost:8080/hello/Sakura
      */
-    @GetMapping("/hello")
+    @GetMapping("/hello/{name}")
     //就是这里注意看String变成了Greeting
-    public Greeting sayhello(@RequestParam(value = "name", defaultValue = "Guest") String name){
+    public Greeting sayhello(@PathVariable(value = "name") String name){
         return helloService.getGreetingWithParam(name);
     }
 }
