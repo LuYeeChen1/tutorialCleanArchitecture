@@ -20,4 +20,7 @@ public class Student {
 
     private String name;
     private int score;
+
+    // 假设这是一个秘密字段，绝对不能让前端看到
+    private String internalNote;
 }

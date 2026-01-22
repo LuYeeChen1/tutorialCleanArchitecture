@@ -1,9 +1,12 @@
 package com.java.tutorial.clean_structure.service;
 
+import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
 import org.springframework.stereotype.Service;
 import com.java.tutorial.clean_structure.model.Student;
 import com.java.tutorial.clean_structure.repository.StudentRepository;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Service: 告诉 Spring Boot 这是一个业务逻辑组件。
@@ -22,7 +25,7 @@ public class HelloService {
 
     // 保存学生的方法
     public Student saveStudent(String name, int score) {
-        Student newStudent = new Student(null,name, score);
+        Student newStudent = new Student(null,name, score, "Secret");
         // .save() 是 JpaRepository 自带的，它会自动生成 INSERT INTO 语句
         return studentRepository.save(newStudent);
     }
@@ -52,5 +55,16 @@ public class HelloService {
     public List<Student> getAllStudents() {
         // .findAll() 也是自带的，它会自动生成 SELECT * FROM 语句
         return studentRepository.findAll();
+    }
+
+    public List<StudentResponseDTO> getAllStudentsInfoForFrontend() {
+        return studentRepository.findAll().stream()
+                //s is come from Student model. Student Model come from JpaRepository<Student,Long>
+                .map(s -> StudentResponseDTO.builder()
+                        .id(s.getId())
+                        .studentDisplayName(s.getName())
+                        .status(s.getScore() >= 60 ? "Passed" : "Failed")
+                        .build())
+                .collect(Collectors.toList());
     }
 }

@@ -1,4 +1,5 @@
 package com.java.tutorial.clean_structure.controller;
+import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
 import com.java.tutorial.clean_structure.model.Student;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,8 +36,8 @@ public class HelloController {
 
     //localhost:8080/list
     @GetMapping("/list")
-    public List<Student> listStudents(){
-        return helloService.getAllStudents();
+    public List<StudentResponseDTO> listStudents(){
+        return helloService.getAllStudentsInfoForFrontend();
     }
 
     //localhost:8080/update/1?score=xxx
