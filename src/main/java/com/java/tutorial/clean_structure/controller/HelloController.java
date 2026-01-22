@@ -34,4 +34,14 @@ public class HelloController {
     public List<Student> listStudents(){
         return helloService.getAllStudents();
     }
+
+    @GetMapping("/update/{id}")
+    public Student updateStudent(@PathVariable Long id, @RequestParam int score){
+        return helloService.updateStudent(id, score);
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteStudent(@PathVariable Long id){
+        return helloService.deleteStudent(id);
+    }
 }

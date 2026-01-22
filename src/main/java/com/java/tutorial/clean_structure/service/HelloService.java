@@ -27,6 +27,27 @@ public class HelloService {
         return studentRepository.save(newStudent);
     }
 
+    public Student updateStudent(Long id, int newScore) {
+        // 1. 先通过 ID 找到学生。如果找不到，这里简单的返回 null (实际开发会报错)
+        Student existingstudent = studentRepository.findById(id).orElse(null);
+
+        if (existingstudent != null) {
+            // 2. 修改分数
+            existingstudent.setScore(newScore);
+
+            // 3. 重新保存。JPA 看到有 ID，就会执行更新操作
+            return studentRepository.save(existingstudent);
+        }
+        return null;
+    }
+
+    //注意，这里是String不是Student
+    public String deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+        // 直接调用自带的删除方法
+        return "Student with ID " + id + " has been deleted.";
+    }
+
     // 获取所有学生的方法
     public List<Student> getAllStudents() {
         // .findAll() 也是自带的，它会自动生成 SELECT * FROM 语句
