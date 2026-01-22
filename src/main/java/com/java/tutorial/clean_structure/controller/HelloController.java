@@ -35,11 +35,13 @@ public class HelloController {
         return helloService.getAllStudents();
     }
 
+    //localhost:8080/update?1&score=xxx
     @GetMapping("/update/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestParam int score){
         return helloService.updateStudent(id, score);
     }
 
+    //localhost:8080/update?1
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id){
         return helloService.deleteStudent(id);
