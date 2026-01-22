@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Data
-@NoArgsConstructor // JPA 必须需要一个无参构造函数
-@AllArgsConstructor
+@NoArgsConstructor // JPA 必须需要一个无参构造函数. Example public Student() {}
+@AllArgsConstructor //mean public Student (xxx){this.xxx = xxx}
 @Entity // 告诉 JPA：这个类对应数据库里的一张表
 @Table(name = "students") // 数据库里的表名叫做 students
 public class Student {
