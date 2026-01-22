@@ -1,5 +1,6 @@
 package com.java.tutorial.clean_structure.service;
 
+import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
 import org.springframework.stereotype.Service;
 import com.java.tutorial.clean_structure.model.Student;
@@ -24,10 +25,27 @@ public class HelloService {
     }
 
     // 保存学生的方法
-    public Student saveStudent(String name, int score) {
-        Student newStudent = new Student(null,name, score, "Secret");
-        // .save() 是 JpaRepository 自带的，它会自动生成 INSERT INTO 语句
-        return studentRepository.save(newStudent);
+    public StudentResponseDTO saveStudent(StudentRequestDTO studentRequestDTO) {
+        // 【搬运 1】：把 DTO 的数据搬进 Entity (准备存入仓库)
+        // 注意：这里我们手动把前端传来的数据塞进数据库实体
+        Student newStudent = new Student();
+        newStudent.setName(studentRequestDTO.getName());
+        newStudent.setScore(studentRequestDTO.getScore());
+        newStudent.setInternalNote("Secret"); // 秘密数据直接在这里写死，前端不需要传
+
+        // 【执行保存】：调用仓库保存，拿到带 ID 的结果
+        Student savedStudent = studentRepository.save(newStudent);
+
+        // 【搬运 2】：把保存后的 Entity 搬进 Response DTO (准备端给前端)
+        StudentResponseDTO response = new StudentResponseDTO();
+        response.setId(savedStudent.getId());
+        response.setStudentDisplayName(savedStudent.getName());
+
+        // 增加一点逻辑转换
+        String gradeResult = savedStudent.getScore() >= 60 ? "PASS" : "FAIL";
+        response.setResult(gradeResult);
+
+        return response;
     }
 
     public Student updateStudent(Long id, int newScore) {
@@ -63,7 +81,7 @@ public class HelloService {
                 .map(s -> StudentResponseDTO.builder()
                         .id(s.getId())
                         .studentDisplayName(s.getName())
-                        .status(s.getScore() >= 60 ? "Passed" : "Failed")
+                        .result(s.getScore() >= 60 ? "Passed" : "Failed")
                         .build())
                 .collect(Collectors.toList());
     }

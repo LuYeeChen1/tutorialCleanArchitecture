@@ -1,10 +1,8 @@
 package com.java.tutorial.clean_structure.controller;
+import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
 import com.java.tutorial.clean_structure.model.Student;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import com.java.tutorial.clean_structure.service.HelloService;
 
@@ -29,9 +27,14 @@ public class HelloController {
     //@RequesParam = ?xxx
 
     //localhost:8080/add?name=Sakura&score=60
-    @GetMapping("/add")
-    public Student addStudent(@RequestParam String name, @RequestParam int score){
-        return helloService.saveStudent(name, score);
+    /**
+     * @PostMapping: 告诉 Spring 这个接口是用来“提交/新增”数据的。
+     * @RequestBody: 告诉 Spring 去请求体里找 JSON 数据，并自动填入 StudentRequest 对象。
+     */
+    @PostMapping("/add")
+    public StudentResponseDTO addStudent(@RequestBody StudentRequestDTO request) {
+        // 调用已经 DTO 化后的 Service 方法
+        return helloService.saveStudent(request);
     }
 
     //localhost:8080/list
