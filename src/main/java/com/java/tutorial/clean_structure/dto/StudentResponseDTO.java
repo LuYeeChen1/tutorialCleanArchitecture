@@ -1,12 +1,10 @@
 package com.java.tutorial.clean_structure.dto;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder  // <--- 核心！加上这个注解
 public class StudentResponseDTO {
     // 我们把 id 和 name 给前端，但不给 internalNote
