@@ -25,6 +25,8 @@ public class HelloController {
         this.helloService = helloService;
     }
 
+    //@RequesParam = ?xxx
+
     //localhost:8080/add?name=Sakura&score=60
     @GetMapping("/add")
     public Student addStudent(@RequestParam String name, @RequestParam int score){
