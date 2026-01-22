@@ -14,7 +14,9 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 让数据库自动生成 ID (1, 2, 3...)
-    private long id;
+
+    //必须是大写的Long，而不是long
+    private Long id;
 
     private String name;
     private int score;

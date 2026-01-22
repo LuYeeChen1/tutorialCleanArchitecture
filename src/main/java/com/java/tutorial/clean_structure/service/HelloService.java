@@ -1,6 +1,9 @@
 package com.java.tutorial.clean_structure.service;
-import com.java.tutorial.clean_structure.model.Greeting;
+
 import org.springframework.stereotype.Service;
+import com.java.tutorial.clean_structure.model.Student;
+import com.java.tutorial.clean_structure.repository.StudentRepository;
+import java.util.List;
 
 /**
  * @Service: 告诉 Spring Boot 这是一个业务逻辑组件。
@@ -9,17 +12,24 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HelloService {
-    //注意，这里已经不是String,而是Greeting
-    public Greeting getGreetingWithParam(String name)
-    {
-        String message = "Hello, " + name + "! Welcome to Spring Boot 4.0.";
 
-        // 创建一个 Greeting 对象并填入数据
-        // 这里的 new 是允许的，因为它是数据载体 (Model)
-        return new Greeting(
-                message,
-                "Success",
-                200
-        );
+    private final StudentRepository studentRepository;
+
+    // 构造函数注入：Spring Boot 4.0 会自动把仓库找来给你
+    public HelloService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    // 保存学生的方法
+    public Student saveStudent(String name, int score) {
+        Student newStudent = new Student(null,name, score);
+        // .save() 是 JpaRepository 自带的，它会自动生成 INSERT INTO 语句
+        return studentRepository.save(newStudent);
+    }
+
+    // 获取所有学生的方法
+    public List<Student> getAllStudents() {
+        // .findAll() 也是自带的，它会自动生成 SELECT * FROM 语句
+        return studentRepository.findAll();
     }
 }
