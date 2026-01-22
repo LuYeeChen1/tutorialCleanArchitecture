@@ -25,23 +25,25 @@ public class HelloController {
         this.helloService = helloService;
     }
 
+    //localhost:8080/add?name=Sakura&score=60
     @GetMapping("/add")
     public Student addStudent(@RequestParam String name, @RequestParam int score){
         return helloService.saveStudent(name, score);
     }
 
+    //localhost:8080/list
     @GetMapping("/list")
     public List<Student> listStudents(){
         return helloService.getAllStudents();
     }
 
-    //localhost:8080/update?1&score=xxx
+    //localhost:8080/update/1?score=xxx
     @GetMapping("/update/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestParam int score){
         return helloService.updateStudent(id, score);
     }
 
-    //localhost:8080/update?1
+    //localhost:8080/update/1
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id){
         return helloService.deleteStudent(id);
