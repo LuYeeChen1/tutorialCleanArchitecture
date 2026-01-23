@@ -39,6 +39,7 @@ public class HelloService {
                 // 2. 显式的 Lambda 调用 Repository
                 .map(student -> studentRepository.save(student))
 
+                // 3. 显式的 Lambda 进行转换
                 .map(saved -> {
                     return StudentResponseDTO.builder()
                             .id(saved.getId())
