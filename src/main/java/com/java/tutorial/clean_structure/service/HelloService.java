@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * @Service: 告诉 Spring Boot 这是一个业务逻辑组件。
+ * Service: 告诉 Spring Boot 这是一个业务逻辑组件。
  * 在 2026 年的 Spring Boot 4.0 中，这些组件会自动被纳入模块化管理，
  * 从而实现极速启动。
  */
@@ -29,24 +29,20 @@ public class HelloService {
     public StudentResponseDTO saveStudent(StudentRequestDTO studentRequestDTO) {
         return Optional.ofNullable(studentRequestDTO)
                 // 1. 显式的 Lambda： (参数) -> { 代码块 }
-                .map(req -> {
-                    return Student.builder()
-                            .name(req.getName())
-                            .score(req.getScore())
-                            .internalNote("Secret")
-                            .build();
-                })
+                .map(req -> Student.builder()
+                        .name(req.getName())
+                        .score(req.getScore())
+                        .internalNote("Secret")
+                        .build())
                 // 2. 显式的 Lambda 调用 Repository
-                .map(student -> studentRepository.save(student))
+                .map(studentRepository::save)
 
                 // 3. 显式的 Lambda 进行转换
-                .map(saved -> {
-                    return StudentResponseDTO.builder()
-                            .id(saved.getId())
-                            .studentDisplayName(saved.getName())
-                            .result(saved.getScore() >= 60 ? "Pass" : "Fail")
-                            .build();
-                })
+                .map(saved -> StudentResponseDTO.builder()
+                        .id(saved.getId())
+                        .studentDisplayName(saved.getName())
+                        .result(saved.getScore() >= 60 ? "Pass" : "Fail")
+                        .build())
 
                 .orElseThrow(() -> new RuntimeException("Save student failed"));
 
@@ -73,11 +69,11 @@ public class HelloService {
         return "Student with ID " + id + " has been deleted.";
     }
 
-    // 获取所有学生的方法
-    public List<Student> getAllStudents() {
-        // .findAll() 也是自带的，它会自动生成 SELECT * FROM 语句
+
+/**    public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+ */
 
     public List<StudentResponseDTO> getAllStudentsInfoForFrontend() {
         return studentRepository.findAll().stream()
