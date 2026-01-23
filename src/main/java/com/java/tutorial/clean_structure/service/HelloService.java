@@ -7,6 +7,7 @@ import com.java.tutorial.clean_structure.model.Student;
 import com.java.tutorial.clean_structure.repository.StudentRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -26,26 +27,28 @@ public class HelloService {
 
     // 保存学生的方法
     public StudentResponseDTO saveStudent(StudentRequestDTO studentRequestDTO) {
-        // 【搬运 1】：把 DTO 的数据搬进 Entity (准备存入仓库)
-        // 注意：这里我们手动把前端传来的数据塞进数据库实体
-        Student newStudent = new Student();
-        newStudent.setName(studentRequestDTO.getName());
-        newStudent.setScore(studentRequestDTO.getScore());
-        newStudent.setInternalNote("Secret"); // 秘密数据直接在这里写死，前端不需要传
+        return Optional.ofNullable(studentRequestDTO)
+                // 1. 显式的 Lambda： (参数) -> { 代码块 }
+                .map(req -> {
+                    return Student.builder()
+                            .name(req.getName())
+                            .score(req.getScore())
+                            .internalNote("Secret")
+                            .build();
+                })
+                // 2. 显式的 Lambda 调用 Repository
+                .map(student -> studentRepository.save(student))
 
-        // 【执行保存】：调用仓库保存，拿到带 ID 的结果
-        Student savedStudent = studentRepository.save(newStudent);
+                .map(saved -> {
+                    return StudentResponseDTO.builder()
+                            .id(saved.getId())
+                            .studentDisplayName(saved.getName())
+                            .result(saved.getScore() >= 60 ? "Pass" : "Fail")
+                            .build();
+                })
 
-        // 【搬运 2】：把保存后的 Entity 搬进 Response DTO (准备端给前端)
-        StudentResponseDTO response = new StudentResponseDTO();
-        response.setId(savedStudent.getId());
-        response.setStudentDisplayName(savedStudent.getName());
+                .orElseThrow(() -> new RuntimeException("Save student failed"));
 
-        // 增加一点逻辑转换
-        String gradeResult = savedStudent.getScore() >= 60 ? "PASS" : "FAIL";
-        response.setResult(gradeResult);
-
-        return response;
     }
 
     public Student updateStudent(Long id, int newScore) {
