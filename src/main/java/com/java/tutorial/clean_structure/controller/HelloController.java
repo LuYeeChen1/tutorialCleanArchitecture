@@ -1,6 +1,7 @@
 package com.java.tutorial.clean_structure.controller;
 import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
+import com.java.tutorial.clean_structure.dto.StudentUpdateDTO;
 import com.java.tutorial.clean_structure.model.Student;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,9 +45,9 @@ public class HelloController {
     }
 
     //localhost:8080/update/1?score=xxx
-    @GetMapping("/update/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestParam int score){
-        return helloService.updateStudent(id, score);
+    @PutMapping("/update/{id}")
+    public StudentResponseDTO updateStudent(@PathVariable Long id, @RequestBody StudentUpdateDTO updateRequest) {
+        return helloService.updateStudent(id, updateRequest);
     }
 
     //localhost:8080/update/1

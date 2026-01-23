@@ -2,6 +2,7 @@ package com.java.tutorial.clean_structure.service;
 
 import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
+import com.java.tutorial.clean_structure.dto.StudentUpdateDTO;
 import org.springframework.stereotype.Service;
 import com.java.tutorial.clean_structure.model.Student;
 import com.java.tutorial.clean_structure.repository.StudentRepository;
@@ -48,16 +49,25 @@ public class HelloService {
         return response;
     }
 
-    public Student updateStudent(Long id, int newScore) {
-        // 1. 先通过 ID 找到学生。如果找不到，这里简单的返回 null (实际开发会报错)
-        Student existingstudent = studentRepository.findById(id).orElse(null);
+    public StudentResponseDTO updateStudent(Long id, StudentUpdateDTO updateData) {
+        // 1. 【查询】使用 findById 找到数据库里的原始实体
+        // 这里使用 Optional 盒子，如果没找到就返回 null (或抛出异常)
+        Student existingStudent = studentRepository.findById(id).orElse(null);
 
-        if (existingstudent != null) {
-            // 2. 修改分数
-            existingstudent.setScore(newScore);
+        if (existingStudent != null) {
+            // 2. 【修改】将 DTO 里的新分数搬运到实体中
+            existingStudent.setScore(updateData.getNewScore());
 
-            // 3. 重新保存。JPA 看到有 ID，就会执行更新操作
-            return studentRepository.save(existingstudent);
+            // 3. 【保存】调用 save。JPA 识别到已有 ID，会自动执行 UPDATE
+            Student updatedStudent = studentRepository.save(existingStudent);
+
+            // 4. 【转换】将更新后的实体包装成 Response DTO 返回
+            StudentResponseDTO response = new StudentResponseDTO();
+            response.setId(updatedStudent.getId());
+            response.setStudentDisplayName(updatedStudent.getName());
+            response.setResult(updatedStudent.getScore() >= 60 ? "PASS" : "FAIL");
+
+            return response;
         }
         return null;
     }
