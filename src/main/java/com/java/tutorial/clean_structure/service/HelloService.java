@@ -28,24 +28,30 @@ public class HelloService {
     // 保存学生的方法
     public StudentResponseDTO saveStudent(StudentRequestDTO studentRequestDTO) {
         return Optional.ofNullable(studentRequestDTO)
-                // 1. 显式的 Lambda： (参数) -> { 代码块 }
-                .map(req -> Student.builder()
-                        .name(req.getName())
-                        .score(req.getScore())
-                        .internalNote("Secret")
-                        .build())
-                // 2. 显式的 Lambda 调用 Repository
+                // 1. 转换：由专用的方法负责，主流程看不见脏代码
+                .map(this::toStudentEntity)
+                // 2. 保存：清晰明了
                 .map(studentRepository::save)
+                // 3. 转换：同样由专用方法负责
+                .map(this::toStudentResponseDTO)
+                // 4. 收尾
+                .orElseThrow(() -> new RuntimeException("Save failed"));
+    }
 
-                // 3. 显式的 Lambda 进行转换
-                .map(saved -> StudentResponseDTO.builder()
-                        .id(saved.getId())
-                        .studentDisplayName(saved.getName())
-                        .result(saved.getScore() >= 60 ? "Pass" : "Fail")
-                        .build())
+    private Student toStudentEntity(StudentRequestDTO studentRequestDTO) {
+        return Student.builder()
+                .name(studentRequestDTO.getName())
+                .score(studentRequestDTO.getScore())
+                .internalNote("Secret")
+                .build();
+    }
 
-                .orElseThrow(() -> new RuntimeException("Save student failed"));
-
+    private StudentResponseDTO toStudentResponseDTO(Student saved) {
+        return StudentResponseDTO.builder()
+                .id(saved.getId())
+                .studentDisplayName(saved.getName())
+                .result(saved.getScore() >= 60 ? "Pass" : "Fail")
+                .build();
     }
 
     public Student updateStudent(Long id, int newScore) {
