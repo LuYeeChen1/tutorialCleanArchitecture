@@ -31,18 +31,21 @@ public class HelloController {
      * PostMapping: 告诉 Spring 这个接口是用来“提交/新增”数据的。
      * RequestBody: 告诉 Spring 去请求体里找 JSON 数据，并自动填入 StudentRequest 对象。
      */
+    //Post 是增加
     @PostMapping("/add")
     public StudentResponseDTO addStudent(@RequestBody StudentRequestDTO request) {
         // 调用已经 DTO 化后的 Service 方法
         return helloService.saveStudent(request);
     }
 
+    //Get 是拿
     //localhost:8080/list
     @GetMapping("/list")
     public List<StudentResponseDTO> listStudents(){
         return helloService.getAllStudentsInfoForFrontend();
     }
 
+    //Put 是改
     //localhost:8080/update/1
     @PutMapping("/update/{id}")
     public StudentResponseDTO updateStudent(@PathVariable Long id, @RequestBody StudentUpdateRequestDTO updateRequest) {
