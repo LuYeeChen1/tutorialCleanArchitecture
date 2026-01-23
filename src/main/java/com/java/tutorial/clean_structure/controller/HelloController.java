@@ -1,7 +1,7 @@
 package com.java.tutorial.clean_structure.controller;
 import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
-import com.java.tutorial.clean_structure.model.Student;
+import com.java.tutorial.clean_structure.dto.StudentUpdateRequestDTO;
 import org.springframework.web.bind.annotation.*;
 
 import com.java.tutorial.clean_structure.service.HelloService;
@@ -9,7 +9,7 @@ import com.java.tutorial.clean_structure.service.HelloService;
 import java.util.List;
 
 /**
- * @RestController: 告诉 Spring 这是一个 Web 接口类
+ * RestController: 告诉 Spring 这是一个 Web 接口类
  */
 @RestController
 public class HelloController {
@@ -28,8 +28,8 @@ public class HelloController {
 
     //localhost:8080/add?name=Sakura&score=60
     /**
-     * @PostMapping: 告诉 Spring 这个接口是用来“提交/新增”数据的。
-     * @RequestBody: 告诉 Spring 去请求体里找 JSON 数据，并自动填入 StudentRequest 对象。
+     * PostMapping: 告诉 Spring 这个接口是用来“提交/新增”数据的。
+     * RequestBody: 告诉 Spring 去请求体里找 JSON 数据，并自动填入 StudentRequest 对象。
      */
     @PostMapping("/add")
     public StudentResponseDTO addStudent(@RequestBody StudentRequestDTO request) {
@@ -43,10 +43,10 @@ public class HelloController {
         return helloService.getAllStudentsInfoForFrontend();
     }
 
-    //localhost:8080/update/1?score=xxx
-    @GetMapping("/update/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestParam int score){
-        return helloService.updateStudent(id, score);
+    //localhost:8080/update/1
+    @PutMapping("/update/{id}")
+    public StudentResponseDTO updateStudent(@PathVariable Long id, @RequestBody StudentUpdateRequestDTO updateRequest) {
+        return helloService.updateStudent(id, updateRequest);
     }
 
     //localhost:8080/update/1

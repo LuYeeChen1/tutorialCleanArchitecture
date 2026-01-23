@@ -2,6 +2,7 @@ package com.java.tutorial.clean_structure.service;
 
 import com.java.tutorial.clean_structure.dto.StudentRequestDTO;
 import com.java.tutorial.clean_structure.dto.StudentResponseDTO;
+import com.java.tutorial.clean_structure.dto.StudentUpdateRequestDTO;
 import org.springframework.stereotype.Service;
 import com.java.tutorial.clean_structure.model.Student;
 import com.java.tutorial.clean_structure.repository.StudentRepository;
@@ -54,18 +55,18 @@ public class HelloService {
                 .build();
     }
 
-    public Student updateStudent(Long id, int newScore) {
-        // 1. 先通过 ID 找到学生。如果找不到，这里简单的返回 null (实际开发会报错)
-        Student existingstudent = studentRepository.findById(id).orElse(null);
+    public StudentResponseDTO updateStudent(Long id, StudentUpdateRequestDTO studentUpdateRequestDTO) {
 
-        if (existingstudent != null) {
-            // 2. 修改分数
-            existingstudent.setScore(newScore);
+        Student existingStudent = studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
 
-            // 3. 重新保存。JPA 看到有 ID，就会执行更新操作
-            return studentRepository.save(existingstudent);
-        }
-        return null;
+        return Optional.of(existingStudent)
+                .map(existing -> {
+                    existing.setScore(studentUpdateRequestDTO.getScore());
+                    return existing;
+                })
+                .map(studentRepository::save)
+                .map(this::toStudentResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Update failed"));
     }
 
     //注意，这里是String不是Student
