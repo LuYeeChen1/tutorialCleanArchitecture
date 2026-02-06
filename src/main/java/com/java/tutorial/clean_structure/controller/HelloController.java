@@ -27,6 +27,7 @@ public class HelloController {
 
     //@RequesParam = ?xxx
 
+    // 新增學生：接收 JSON 數據並建立一筆新的學生資料
     //localhost:8080/add?name=Sakura&score=60
     /**
      * @PostMapping: 告诉 Spring 这个接口是用来“提交/新增”数据的。
@@ -38,18 +39,21 @@ public class HelloController {
         return helloService.saveStudent(request);
     }
 
+    // 查詢列表：獲取所有學生的資訊，通常用於前端表格顯示
     //localhost:8080/list
     @GetMapping("/list")
     public List<StudentResponseDTO> listStudents(){
         return helloService.getAllStudentsInfoForFrontend();
     }
 
+    // 修改資料：根據 ID 找到特定學生並更新其內容（如分數、姓名等）
     //localhost:8080/update/1?score=xxx
     @PutMapping("/update/{id}")
     public StudentResponseDTO updateStudent(@PathVariable Long id, @RequestBody StudentUpdateDTO updateRequest) {
         return helloService.updateStudent(id, updateRequest);
     }
 
+    // 刪除學生：根據 ID 移除特定的學生資料
     //localhost:8080/update/1
     @GetMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id){
